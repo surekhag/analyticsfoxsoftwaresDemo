@@ -65,7 +65,7 @@ const Home = (props) => {
         <Redirect
           to={{
             pathname: "/register",
-            state: { projectToUpdate: user },
+            state: { userToUpdate: user },
           }}
         />
       ) : (

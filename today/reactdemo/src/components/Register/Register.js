@@ -25,7 +25,7 @@ const useStyles = makeStyles(styles);
 const Register = (props) => {
   console.log("data", props.location.state);
 
-  let { projectToUpdate } = props.location.state || {};
+  let { userToUpdate } = props.location.state || {};
   const classes = useStyles();
   const { cardTitleWhite } = classes;
   const { addToast } = useToasts();
@@ -43,20 +43,20 @@ const Register = (props) => {
     const foundUser = allUsers.find(
       (element) => element.username === values.username
     );
-    if (!foundUser && projectToUpdate) {
+    if (!foundUser && userToUpdate) {
       addToast("Username must be unique!", {
         appearance: "error",
         autoDismiss: true,
       });
-    } else if (foundUser && !projectToUpdate) {
+    } else if (foundUser && !userToUpdate) {
       addToast("Username Alredy Exist!", {
         appearance: "error",
         autoDismiss: true,
       });
-    } else if (!foundUser && !projectToUpdate) {
+    } else if (!foundUser && !userToUpdate) {
       dispatch(addNewUser(values));
       setUser(values);
-    } else if (foundUser && projectToUpdate) {
+    } else if (foundUser && userToUpdate) {
       console.log("inside else");
       const objIndex = allUsers.findIndex(
         (obj) => obj.username === values.username
@@ -76,7 +76,7 @@ const Register = (props) => {
     password,
     email,
     contact_number,
-  } = projectToUpdate ? projectToUpdate : {};
+  } = userToUpdate ? userToUpdate : {};
 
   initialValues = {
     firstName,
@@ -88,9 +88,9 @@ const Register = (props) => {
   };
 
   const handleCancelActivity = () => {
-    console.log(user, projectToUpdate);
-    if (projectToUpdate) {
-      setUser(projectToUpdate);
+    console.log(user, userToUpdate);
+    if (userToUpdate) {
+      setUser(userToUpdate);
     } else {
       // return <Redirect to="/login" />;  This is not working here
       setRedirect(true);
@@ -124,7 +124,7 @@ const Register = (props) => {
                   <Form ref={userForm}>
                     <CardHeader color="primary">
                       <h4 style={titleText} className={cardTitleWhite}>
-                        {projectToUpdate ? "UPDATE USER" : "ADD USER"}
+                        {userToUpdate ? "UPDATE USER" : "ADD USER"}
                       </h4>
                     </CardHeader>
 
@@ -139,7 +139,7 @@ const Register = (props) => {
                     </CardBody>
 
                     <CardFooter>
-                      {projectToUpdate ? (
+                      {userToUpdate ? (
                         <>
                           <GridItem xs={12} sm={12} md={6}>
                             <Button
