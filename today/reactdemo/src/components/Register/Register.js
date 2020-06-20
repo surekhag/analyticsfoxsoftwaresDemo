@@ -34,11 +34,21 @@ const Register = (props) => {
   const allUsers = useSelector((state) => state.loginReducer.users);
   const userForm = useRef(null);
   const [redirect, setRedirect] = useState(false);
+
+  const titleText = {
+    textAlign: "center",
+  };
+
   const submitFormValues = (values) => {
     const foundUser = allUsers.find(
       (element) => element.username === values.username
     );
-    if (foundUser && !projectToUpdate) {
+    if (!foundUser && projectToUpdate) {
+      addToast("Username must be unique!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    } else if (foundUser && !projectToUpdate) {
       addToast("Username Alredy Exist!", {
         appearance: "error",
         autoDismiss: true,
@@ -47,16 +57,10 @@ const Register = (props) => {
       dispatch(addNewUser(values));
       setUser(values);
     } else if (foundUser && projectToUpdate) {
+      console.log("inside else");
       const objIndex = allUsers.findIndex(
-        (obj) => obj.username == values.username
+        (obj) => obj.username === values.username
       );
-      if (allUsers[objIndex].username !== values.username) {
-        console.log(
-          "val change ",
-          allUsers[objIndex].username,
-          values.username
-        );
-      }
       allUsers[objIndex] = values;
       setCurrentUserData(values);
       dispatch(updateUser(allUsers[objIndex]));
@@ -119,7 +123,7 @@ const Register = (props) => {
                 <Card>
                   <Form ref={userForm}>
                     <CardHeader color="primary">
-                      <h4 className={cardTitleWhite}>
+                      <h4 style={titleText} className={cardTitleWhite}>
                         {projectToUpdate ? "UPDATE USER" : "ADD USER"}
                       </h4>
                     </CardHeader>

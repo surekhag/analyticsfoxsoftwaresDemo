@@ -18,6 +18,10 @@ const stylesForButton = {
   borderRadius: "5",
   margin: "auto",
   display: "flex",
+  justifyContent: "center",
+};
+const titleText = {
+  textAlign: "center",
 };
 
 const Home = (props) => {
@@ -66,9 +70,12 @@ const Home = (props) => {
         />
       ) : (
         <GridItem xs={12} sm={12} md={12}>
+          <h1 style={titleText}>Welcome to Home</h1>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>User Profile</h4>
+              <h4 style={titleText} className={classes.cardTitleWhite}>
+                User Profile
+              </h4>
             </CardHeader>
             <CardBody>
               <GridContainer>

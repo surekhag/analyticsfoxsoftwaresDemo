@@ -2,7 +2,6 @@ import React from "react";
 import "./App.css";
 import { ToastProvider } from "react-toast-notifications";
 import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
-// import login from './components/Login/login';
 import SignIn from "./components/Login/SignIn";
 import Register from "./components/Register/Register";
 import Home from "./components/Home/Home";
