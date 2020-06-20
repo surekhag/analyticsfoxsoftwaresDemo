@@ -1,3 +1,8 @@
+import {
+  CURRENT_USER,
+  ADD_NEW_USER,
+  UPDATE_USER,
+} from "../actions/actionTypes";
 const initialState = {
   users: [
     {
@@ -10,16 +15,30 @@ const initialState = {
     },
   ],
   error: "null",
+  currentUser: null,
 };
 
 const loginReducer = (state = initialState, action) => {
-  console.log("in reducer ", state);
   switch (action.type) {
-    // case SET_ERROR_STATE:
-    //   return {
-    //     ...state,
-    //     error: action.errorData,
-    //   };
+    case CURRENT_USER:
+      return {
+        ...state,
+        currentUser: action.userInfo,
+      };
+    case ADD_NEW_USER:
+      console.log("in reducer ", action);
+      const data = [...state.users, action.userInfo];
+      console.log(data);
+      return {
+        ...state,
+        currentUser: action.userInfo,
+        users: [...state.users, action.userInfo],
+      };
+    case UPDATE_USER:
+      return {
+        ...state,
+        currentUser: action.userInfo,
+      };
 
     default:
       return state;

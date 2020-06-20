@@ -1,14 +1,4 @@
-// import React from "react";
-// const Register = () => {
-//   return (
-//     <>
-//       <h1>Register</h1>
-//     </>
-//   );
-// };
-// export default Register;
-
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "../../material-ui/Grid/GridContainer";
 import GridItem from "../../material-ui/Grid/GridItem";
@@ -18,27 +8,15 @@ import CardBody from "../../material-ui/Card/CardBody";
 import CardFooter from "../../material-ui/Card/CardFooter";
 import Button from "../../material-ui/CustomButtons/Button";
 // import "date-fns";
-import {
-  creatNewProjectValidations,
-  projectInputList,
-  projectDatePickerList,
-} from "./formData";
+import { creatNewValidations, userInputList } from "./formData";
+import { Link, Redirect } from "react-router-dom";
+
 import InputFields from "../../material-ui/FromComponents/InputFields";
 import { useToasts } from "react-toast-notifications";
 import { Formik, Form } from "formik";
 import styles from "../../material-ui/styles/dashboardStyle";
 import { useSelector, useDispatch } from "react-redux";
-// import {
-//   addNewProject,
-//   clearProjectMsg,
-//   updateProject,
-// } from "../../actions/projectAction";
-// import {
-//   addProjectError,
-//   addNewProjectStatusMsg,
-//   updateProjectStatusMsg,
-//   updateProjectErrorMsg,
-// } from "../../selectors/projectSelectors";
+import { updateUser, addNewUser } from "../../actions/userActions";
 
 const useStyles = makeStyles(styles);
 const Register = (props) => {
@@ -47,169 +25,151 @@ const Register = (props) => {
   const { cardTitleWhite } = classes;
   const { addToast } = useToasts();
   const dispatch = useDispatch();
-
-  // const error = useSelector(addProjectError);
-  // const addNewProjectStatus = useSelector(addNewProjectStatusMsg);
-  // const updateProjectStatus = useSelector(updateProjectStatusMsg);
-  // const updateProjectError = useSelector(updateProjectErrorMsg);
-
-  const projectForm = useRef(null);
-
-  // useEffect(() => {
-  //   if (addNewProjectStatus) {
-  //     addToast(addNewProjectStatus, {
-  //       appearance: "success",
-  //       autoDismiss: true,
-  //     });
-  //     projectForm.current.reset();
-  //     dispatch(clearProjectMsg());
-  //     setPageView("projectListing");
-  //   }
-  // }, [addNewProjectStatus, addToast, dispatch, setPageView]);
-
-  // useEffect(() => {
-  //   if (updateProjectStatus) {
-  //     addToast(updateProjectStatus, {
-  //       appearance: "success",
-  //       autoDismiss: true,
-  //     });
-  //     projectForm.current.reset();
-  //     dispatch(clearProjectMsg());
-  //     if (props) props.setUpdateAction();
-  //   }
-  // }, [updateProjectStatus, addToast, dispatch, props]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     addToast(error, { appearance: "error", autoDismiss: true });
-  //     dispatch(clearProjectMsg());
-  //   }
-  // }, [error, addToast, dispatch]);
-
-  // useEffect(() => {
-  //   if (updateProjectError) {
-  //     addToast(updateProjectError, { appearance: "error", autoDismiss: true });
-  //     dispatch(clearProjectMsg());
-  //   }
-  // }, [updateProjectError, addToast, dispatch]);
+  const [user, setUser] = useState(null);
+  const allUsers = useSelector((state) => state.loginReducer.users);
+  const userForm = useRef(null);
 
   const submitFormValues = (values) => {
-    dispatch();
-    // projectToUpdate
-    //   ? updateProject(values, projectToUpdate[0]._id)
-    //   : addNewProject(values)
+    console.log(allUsers, "values  ", values);
+    const foundUser = allUsers.find(
+      (element) => element.username === values.username
+    );
+    if (foundUser && !projectToUpdate) {
+      addToast("Username Alredy Exist!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    } else {
+      dispatch(addNewUser(values));
+      setUser(values);
+      // dispatch(projectToUpdate ? updateUser(values) : addNewUser(values));
+    }
+    //check for updates
   };
 
   let initialValues;
   const {
-    title,
-    description,
-    client,
-    client_location,
-    startdate = new Date(),
-    enddate = new Date(),
-    status = "Active",
-    technology,
-    type,
+    firstName,
+    lastName,
+    username,
+    password,
+    email,
+    contact_number,
   } = projectToUpdate ? projectToUpdate[0] : {};
 
   initialValues = {
-    title,
-    description,
-    client,
-    client_location,
-    startdate,
-    enddate,
-    status,
-    technology,
-    type,
+    firstName,
+    lastName,
+    username,
+    password,
+    email,
+    contact_number,
   };
 
   const handleProjectListView = () => {
     props.setUpdateAction();
   };
 
-  const projectDataValidation = creatNewProjectValidations;
-
+  const dataValidation = creatNewValidations;
   return (
-    <GridContainer>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values, { setSubmitting }) => {
-          submitFormValues(values);
-          setSubmitting(false);
-        }}
-        validationSchema={projectDataValidation}
-      >
-        {({ isSubmitting, values, setFieldValue, handleChange }) => (
-          <GridItem xs={12} sm={12} md={12}>
-            <Card>
-              <Form ref={projectForm}>
-                <CardHeader color="primary">
-                  <h4 className={cardTitleWhite}>
-                    {projectToUpdate ? "UPDATE PROJECT" : "ADD PROJECT"}
-                  </h4>
-                </CardHeader>
+    <>
+      {user ? (
+        <Redirect
+          to={{
+            pathname: "/home",
+            state: { data: user },
+          }}
+        />
+      ) : (
+        <GridContainer>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={(values, { setSubmitting }) => {
+              submitFormValues(values);
+              setSubmitting(false);
+            }}
+            validationSchema={dataValidation}
+          >
+            {({ isSubmitting, values, setFieldValue, handleChange }) => (
+              <GridItem xs={12} sm={12} md={12}>
+                <Card>
+                  <Form ref={userForm}>
+                    <CardHeader color="primary">
+                      <h4 className={cardTitleWhite}>
+                        {projectToUpdate ? "UPDATE Employee" : "ADD Employee"}
+                      </h4>
+                    </CardHeader>
 
-                <CardBody>
-                  <GridContainer>
-                    <InputFields
-                      inputList={projectInputList}
-                      values={values}
-                      handleChange={handleChange}
-                    />
-                  </GridContainer>
-                </CardBody>
+                    <CardBody>
+                      <GridContainer>
+                        <InputFields
+                          inputList={userInputList}
+                          values={values}
+                          handleChange={handleChange}
+                        />
+                      </GridContainer>
+                    </CardBody>
 
-                <CardFooter>
-                  {projectToUpdate ? (
-                    <>
-                      <GridItem xs={12} sm={12} md={6}>
-                        <Button
-                          id="update"
-                          type="submit"
-                          color="primary"
-                          disabled={isSubmitting}
-                        >
-                          UPDATE PROJECT
-                        </Button>
-                        <Button
-                          color="white"
-                          disabled={isSubmitting}
-                          onClick={handleProjectListView}
-                        >
-                          cancel
-                        </Button>
-                      </GridItem>
-                    </>
-                  ) : (
-                    <>
-                      <GridItem xs={12} sm={12} md={6}>
-                        <Button
-                          id="add"
-                          type="submit"
-                          color="primary"
-                          disabled={isSubmitting}
-                        >
-                          ADD PROJECT
-                        </Button>
-                        <Button
-                          color="white"
-                          disabled={isSubmitting}
-                          onClick={() => setPageView("projectListing")}
-                        >
-                          cancel
-                        </Button>
-                      </GridItem>
-                    </>
-                  )}
-                </CardFooter>
-              </Form>
-            </Card>
-          </GridItem>
-        )}
-      </Formik>
-    </GridContainer>
+                    <CardFooter>
+                      {projectToUpdate ? (
+                        <>
+                          <GridItem xs={12} sm={12} md={6}>
+                            <Button
+                              id="update"
+                              type="submit"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
+                              UPDATE EMPLOYEE
+                            </Button>
+                            <Button
+                              color="white"
+                              disabled={isSubmitting}
+                              onClick={handleProjectListView}
+                            >
+                              CANCEL
+                            </Button>
+                          </GridItem>
+                        </>
+                      ) : (
+                        <>
+                          <GridItem xs={12} sm={12} md={6}>
+                            <Button
+                              id="add"
+                              type="submit"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
+                              ADD PROJECT
+                            </Button>
+                            <Button
+                              color="white"
+                              disabled={isSubmitting}
+                              // onClick={
+                              //   // () => (
+                              //   <Redirect
+                              //     to={{
+                              //       pathname: "/login",
+                              //       // state: { data: currentUser },
+                              //     }}
+                              //   />
+                              // // )
+                              // }
+                            >
+                              CANCEL
+                            </Button>
+                          </GridItem>
+                        </>
+                      )}
+                    </CardFooter>
+                  </Form>
+                </Card>
+              </GridItem>
+            )}
+          </Formik>
+        </GridContainer>
+      )}
+    </>
   );
 };
 export default Register;

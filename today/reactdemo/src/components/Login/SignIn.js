@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 // import {signinToSite} from '../../actions/loginActions';
 import { useToasts } from "react-toast-notifications";
-import Home from "../Home/Home";
+import { setCurrentUserData } from "../../actions/userActions";
+// import Home from "../Home/Home";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
@@ -80,6 +82,7 @@ const SignIn = (props) => {
           autoDismiss: true,
         });
         setCurrentUser(foundUser);
+        dispatch(setCurrentUserData(foundUser));
       } else {
         addToast("User does not exist!", {
           appearance: "error",
