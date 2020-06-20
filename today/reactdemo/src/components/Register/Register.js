@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "../../material-ui/Grid/GridContainer";
 import GridItem from "../../material-ui/Grid/GridItem";
@@ -7,7 +7,6 @@ import CardHeader from "../../material-ui//Card/CardHeader";
 import CardBody from "../../material-ui/Card/CardBody";
 import CardFooter from "../../material-ui/Card/CardFooter";
 import Button from "../../material-ui/CustomButtons/Button";
-// import "date-fns";
 import { creatNewValidations, userInputList } from "./formData";
 import { Link, Redirect } from "react-router-dom";
 
@@ -34,7 +33,7 @@ const Register = (props) => {
   const [user, setUser] = useState(null);
   const allUsers = useSelector((state) => state.loginReducer.users);
   const userForm = useRef(null);
-
+  const [redirect, setRedirect] = useState(false);
   const submitFormValues = (values) => {
     const foundUser = allUsers.find(
       (element) => element.username === values.username
@@ -48,17 +47,20 @@ const Register = (props) => {
       dispatch(addNewUser(values));
       setUser(values);
     } else if (foundUser && projectToUpdate) {
-      // console.log("in else edit", projectToUpdate);
-      // console.log("in else edit", allUsers, values.username);
       const objIndex = allUsers.findIndex(
         (obj) => obj.username == values.username
       );
-      console.log("before", allUsers);
+      if (allUsers[objIndex].username !== values.username) {
+        console.log(
+          "val change ",
+          allUsers[objIndex].username,
+          values.username
+        );
+      }
       allUsers[objIndex] = values;
-      console.log(allUsers[objIndex]);
-      console.log("after", allUsers);
       setCurrentUserData(values);
       dispatch(updateUser(allUsers[objIndex]));
+      setUser(values); //back to edit;
     }
   };
 
@@ -81,13 +83,20 @@ const Register = (props) => {
     contact_number,
   };
 
-  const handleProjectListView = () => {
-    props.setUpdateAction();
+  const handleCancelActivity = () => {
+    console.log(user, projectToUpdate);
+    if (projectToUpdate) {
+      setUser(projectToUpdate);
+    } else {
+      // return <Redirect to="/login" />;  This is not working here
+      setRedirect(true);
+    }
   };
 
   const dataValidation = creatNewValidations;
   return (
     <>
+      {redirect ? <Redirect to="/login" /> : null}
       {user ? (
         <Redirect
           to={{
@@ -138,11 +147,11 @@ const Register = (props) => {
                               UPDATE EMPLOYEE
                             </Button>
                             <Button
-                              color="white"
+                              color="primary"
                               disabled={isSubmitting}
-                              onClick={handleProjectListView}
+                              onClick={() => handleCancelActivity()}
                             >
-                              CANCEL
+                              BACK TO HOME
                             </Button>
                           </GridItem>
                         </>
@@ -158,21 +167,14 @@ const Register = (props) => {
                               ADD EMPLOYEE
                             </Button>
                             <Button
-                              color="white"
+                              color="primary"
                               disabled={isSubmitting}
-                              // onClick={
-                              //   // () => (
-                              //   <Redirect
-                              //     to={{
-                              //       pathname: "/login",
-                              //       // state: { data: currentUser },
-                              //     }}
-                              //   />
-                              // // )
-                              // }
+                              onClick={() => handleCancelActivity()}
                             >
-                              CANCEL
+                              BACK TO LOGIN
                             </Button>
+
+                            {/* <Link to="/login">Login</Link> */}
                           </GridItem>
                         </>
                       )}

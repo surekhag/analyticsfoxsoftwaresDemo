@@ -13,7 +13,6 @@ export function setCurrentUserData(userInfo) {
   };
 }
 export function updateUser(userInfo) {
-  console.log("current data", userInfo);
   return {
     type: UPDATE_USER,
     userInfo,

@@ -11,8 +11,12 @@ export const creatNewValidations = Yup.object().shape({
     .min(2, "Too Short!")
     .max(50, "Too Long!"),
   lastName: yupRequired("Last Name").min(2, "Too Short!").max(50, "Too Long!"),
-  username: yupRequired("Username").min(6, "Too Short!").max(50, "Too Long!"),
-  password: yupRequired("Password").min(6, "Too Short!").max(50, "Too Long!"),
+  username: yupRequired("Username")
+    .min(6, "Username minimum length is 6")
+    .max(50, "Too Long!"),
+  password: yupRequired("Password")
+    .min(6, "Password minimum length is 6")
+    .max(50, "Too Long!"),
   email: yupRequired("Email").min(2, "Too Short!").max(50, "Too Long!"),
   contact_number: yupRequiredNumber("Contact Number"),
 });

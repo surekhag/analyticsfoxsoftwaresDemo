@@ -1,33 +1,30 @@
 import React, { useState } from "react";
-
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// core components
 import GridItem from "../../material-ui/Grid/GridItem";
 import GridContainer from "../../material-ui/Grid/GridContainer";
-import Register from "../Register/Register";
-import Button from "@material-ui/core/Button";
+import Button from "../../material-ui/CustomButtons/Button";
 import Card from "../../material-ui/Card/Card";
 import CardHeader from "../../material-ui/Card/CardHeader";
-// import { formatDate } from "../../helpers/formatDates";
 import CardBody from "../../material-ui/Card/CardBody";
 import Table from "../../material-ui/Table/Table";
-// import withAuth from "../../HOC/withAuth";
-// import { UserContext } from "../../context-provider/user-context";
 import styles from "../../material-ui/styles/dashboardStyle";
-import { Link, Redirect } from "react-router-dom";
-// import Button from "@material-ui/core/Button";
+import { Redirect } from "react-router-dom";
+import { setCurrentUserData } from "../../actions/userActions";
+import { useDispatch } from "react-redux";
+
 const useStyles = makeStyles(styles);
 const stylesForButton = {
   width: "30%",
   borderRadius: "5",
   margin: "auto",
+  display: "flex",
 };
 
 const Home = (props) => {
-  // console.log(props.location.state.data);
+  const dispatch = useDispatch();
   const classes = useStyles();
   const data = props.location.state.data;
+  const [redirect, setRedirect] = useState(false);
   const [user, setUser] = useState(null);
   const {
     username,
@@ -37,7 +34,6 @@ const Home = (props) => {
     email,
     contact_number,
   } = data;
-  // console.log(username, password, firstName, lastName, email, contact_number);
 
   let employeeDataArray = [];
   const headerArray = [];
@@ -52,12 +48,15 @@ const Home = (props) => {
     [<span className={classes.boldText}>contact Number</span>, contact_number],
   ];
   const editUser = () => {
-    console.log("setUser", data);
     setUser(data);
   };
-
+  const logout = () => {
+    dispatch(setCurrentUserData(null));
+    setRedirect(true);
+  };
   return (
     <>
+      {redirect ? <Redirect to="/login" /> : null}
       {user ? (
         <Redirect
           to={{
@@ -85,13 +84,11 @@ const Home = (props) => {
           </Card>
 
           <div style={stylesForButton}>
-            <Button
-              onClick={editUser}
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
+            <Button onClick={editUser} variant="contained" color="primary">
               Edit Employee
+            </Button>
+            <Button onClick={logout} variant="contained" color="primary">
+              LOGOUT
             </Button>
           </div>
         </GridItem>

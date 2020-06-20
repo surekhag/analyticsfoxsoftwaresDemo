@@ -14,7 +14,7 @@ function App() {
         <ToastProvider>
           <Switch>
             <Route exact path="/login" component={SignIn} />
-            <Route exact path="/register" component={Register} />
+            <Route path="/register" component={Register} />
             <Route path="/home" component={Home} />
             <Redirect from="/" to="/login" />
           </Switch>

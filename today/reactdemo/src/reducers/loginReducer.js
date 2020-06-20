@@ -19,7 +19,6 @@ const initialState = {
 };
 
 const loginReducer = (state = initialState, action) => {
-  console.log("in reducer");
   switch (action.type) {
     case CURRENT_USER:
       return {
@@ -27,16 +26,12 @@ const loginReducer = (state = initialState, action) => {
         currentUser: action.userInfo,
       };
     case ADD_NEW_USER:
-      console.log("in reducer ", action);
-      const data = [...state.users, action.userInfo];
-      console.log(data);
       return {
         ...state,
         currentUser: action.userInfo,
         users: [...state.users, action.userInfo],
       };
     case UPDATE_USER:
-      console.log("in reducer update users ", action);
       return {
         ...state,
         users: action.userInfo,
