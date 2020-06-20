@@ -19,6 +19,7 @@ const initialState = {
 };
 
 const loginReducer = (state = initialState, action) => {
+  console.log("in reducer");
   switch (action.type) {
     case CURRENT_USER:
       return {
@@ -35,9 +36,10 @@ const loginReducer = (state = initialState, action) => {
         users: [...state.users, action.userInfo],
       };
     case UPDATE_USER:
+      console.log("in reducer update users ", action);
       return {
         ...state,
-        currentUser: action.userInfo,
+        users: action.userInfo,
       };
 
     default:

@@ -16,11 +16,17 @@ import { useToasts } from "react-toast-notifications";
 import { Formik, Form } from "formik";
 import styles from "../../material-ui/styles/dashboardStyle";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser, addNewUser } from "../../actions/userActions";
+import {
+  updateUser,
+  addNewUser,
+  setCurrentUserData,
+} from "../../actions/userActions";
 
 const useStyles = makeStyles(styles);
 const Register = (props) => {
-  const { setPageView, projectToUpdate } = props;
+  console.log("data", props.location.state);
+
+  let { projectToUpdate } = props.location.state || {};
   const classes = useStyles();
   const { cardTitleWhite } = classes;
   const { addToast } = useToasts();
@@ -30,7 +36,6 @@ const Register = (props) => {
   const userForm = useRef(null);
 
   const submitFormValues = (values) => {
-    console.log(allUsers, "values  ", values);
     const foundUser = allUsers.find(
       (element) => element.username === values.username
     );
@@ -39,12 +44,22 @@ const Register = (props) => {
         appearance: "error",
         autoDismiss: true,
       });
-    } else {
+    } else if (!foundUser && !projectToUpdate) {
       dispatch(addNewUser(values));
       setUser(values);
-      // dispatch(projectToUpdate ? updateUser(values) : addNewUser(values));
+    } else if (foundUser && projectToUpdate) {
+      // console.log("in else edit", projectToUpdate);
+      // console.log("in else edit", allUsers, values.username);
+      const objIndex = allUsers.findIndex(
+        (obj) => obj.username == values.username
+      );
+      console.log("before", allUsers);
+      allUsers[objIndex] = values;
+      console.log(allUsers[objIndex]);
+      console.log("after", allUsers);
+      setCurrentUserData(values);
+      dispatch(updateUser(allUsers[objIndex]));
     }
-    //check for updates
   };
 
   let initialValues;
@@ -55,7 +70,7 @@ const Register = (props) => {
     password,
     email,
     contact_number,
-  } = projectToUpdate ? projectToUpdate[0] : {};
+  } = projectToUpdate ? projectToUpdate : {};
 
   initialValues = {
     firstName,
@@ -96,7 +111,7 @@ const Register = (props) => {
                   <Form ref={userForm}>
                     <CardHeader color="primary">
                       <h4 className={cardTitleWhite}>
-                        {projectToUpdate ? "UPDATE Employee" : "ADD Employee"}
+                        {projectToUpdate ? "UPDATE EMPLOYEE" : "ADD EMPLOYEE"}
                       </h4>
                     </CardHeader>
 
@@ -140,7 +155,7 @@ const Register = (props) => {
                               color="primary"
                               disabled={isSubmitting}
                             >
-                              ADD PROJECT
+                              ADD EMPLOYEE
                             </Button>
                             <Button
                               color="white"

@@ -155,7 +155,7 @@ const SignIn = (props) => {
                 Sign In
               </Button>
               <div className={classes.alignLink}>
-                <Link to="/register">Register USer</Link>
+                <Link to="/register">Register User</Link>
               </div>
             </form>
           </div>

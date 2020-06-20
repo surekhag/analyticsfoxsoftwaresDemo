@@ -16,14 +16,6 @@ export const creatNewValidations = Yup.object().shape({
   email: yupRequired("Email").min(2, "Too Short!").max(50, "Too Long!"),
   contact_number: yupRequiredNumber("Contact Number"),
 });
-// export const projectAllocationInitialValues = {
-//   firstName: undefined,
-//   lastName: undefined,
-//   contact_number: undefined,
-//   username: undefined,
-//   password: undefined,
-//   email: undefined,
-// };
 
 export const userInputList = [
   { md: 6, name: "firstName", labelText: "First Name *" },
