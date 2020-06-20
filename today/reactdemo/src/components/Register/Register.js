@@ -114,13 +114,13 @@ const Register = (props) => {
             }}
             validationSchema={dataValidation}
           >
-            {({ isSubmitting, values, setFieldValue, handleChange }) => (
+            {({ isSubmitting, values, handleChange }) => (
               <GridItem xs={12} sm={12} md={12}>
                 <Card>
                   <Form ref={userForm}>
                     <CardHeader color="primary">
                       <h4 className={cardTitleWhite}>
-                        {projectToUpdate ? "UPDATE EMPLOYEE" : "ADD EMPLOYEE"}
+                        {projectToUpdate ? "UPDATE USER" : "ADD USER"}
                       </h4>
                     </CardHeader>
 
@@ -144,7 +144,7 @@ const Register = (props) => {
                               color="primary"
                               disabled={isSubmitting}
                             >
-                              UPDATE EMPLOYEE
+                              UPDATE USER
                             </Button>
                             <Button
                               color="primary"
@@ -164,7 +164,7 @@ const Register = (props) => {
                               color="primary"
                               disabled={isSubmitting}
                             >
-                              ADD EMPLOYEE
+                              ADD USER
                             </Button>
                             <Button
                               color="primary"

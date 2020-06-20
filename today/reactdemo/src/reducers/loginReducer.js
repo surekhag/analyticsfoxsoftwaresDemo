@@ -8,7 +8,7 @@ const initialState = {
     {
       firstName: "surekha",
       lastName: "Gadkari",
-      username: "surekha",
+      username: "surekhag",
       password: "12345678",
       contact_number: "7894561230",
       email: "mails.surekhag@gmail.com",

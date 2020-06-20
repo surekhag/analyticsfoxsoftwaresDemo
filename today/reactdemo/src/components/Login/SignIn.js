@@ -67,6 +67,15 @@ const SignIn = (props) => {
       });
     }
     if (username && password) {
+      if (username.length < 8 || password < 8) {
+        addToast("Username/Password minimum length is 8", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+        return;
+      }
+    }
+    if (username && password) {
       const foundUser = allUsers.find(
         (element) =>
           element.username === username && element.password === password

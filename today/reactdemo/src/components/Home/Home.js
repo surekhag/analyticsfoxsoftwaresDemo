@@ -85,7 +85,7 @@ const Home = (props) => {
 
           <div style={stylesForButton}>
             <Button onClick={editUser} variant="contained" color="primary">
-              Edit Employee
+              Edit USER
             </Button>
             <Button onClick={logout} variant="contained" color="primary">
               LOGOUT
